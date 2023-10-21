@@ -3,6 +3,7 @@
 this is additional support for Battlefield Bad Company 2 and 2142 
 
 #ps3
+#bfbc2
 bfbc2-ps3.fesl.ea.com
 FeslPort: 18121
 TheaterPort: 18398
