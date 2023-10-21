@@ -6,6 +6,7 @@ using Arcadia.Storage;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Org.BouncyCastle.Tls;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Arcadia.Handlers;
 
@@ -116,6 +117,64 @@ public class FeslHandler
             else if (reqPacket.Type == "rank" && reqTxn == "GetStats")
             {
                 await HandleGetStats(reqPacket);
+            }
+            else if (reqPacket.Type == "acct" && reqTxn == "NuLogin")
+            {
+                await HandleLogin3(reqPacket);
+            }
+            else if (reqPacket.Type == "acct" && reqTxn == "Login")
+            {
+                await HandleLogin2(reqPacket);
+            }
+            else if (reqPacket.Type == "acct" && reqTxn == "NuGetPersonas")
+            {
+                await HandleNuGetPersonas(reqPacket);
+            }
+            else if (reqPacket.Type == "acct" && reqTxn == "NuLoginPersona")
+            {
+                await HandleNuLoginPersona(reqPacket);
+            }
+            else if (reqPacket.Type == "acct" && reqTxn == "NuGetEntitlements")
+            {
+                await HandleNuGetEntitlements(reqPacket);
+            }
+            else if (reqPacket.Type == "acct" && reqTxn == "GetAccount")
+            {
+                await HandleGetAccount(reqPacket);
+            }
+            else if (reqPacket.Type == "acct" && reqTxn == "GameSpyPreAuth")
+            {
+                await HandleGameSpyPreAuth(reqPacket);
+            }
+            else if (reqPacket.Type == "acct" && reqTxn == "GetSubAccounts")
+            {
+                await HandleGetSubAccounts(reqPacket);
+            }
+            else if (reqPacket.Type == "acct" && reqTxn == "LoginSubAccount")
+            {
+                await HandleLoginSubAccount(reqPacket);
+            }
+
+
+            else if (reqPacket.Type == "acct" && reqTxn == "GetLockerURL")
+            {
+                await HandleGetLockerURL(reqPacket);
+            }
+            else if (reqPacket.Type == "xmsg" && reqTxn == "ModifySettings")
+            {
+                await HandleModifySettings(reqPacket);
+            }
+            else if (reqPacket.Type == "xmsg" && reqTxn == "GetMessages")
+            {
+                await HandleGetMessages(reqPacket);
+            }
+            else if (reqPacket.Type == "recp" && reqTxn == "GetRecordAsMap")
+            {
+                await HandleGetRecordAsMap(reqPacket);
+            }
+            else if (reqPacket.Type == "recp" && reqTxn == "GetRecord")
+            {
+                await HandleGetRecord(reqPacket);
             }
             else
             {
@@ -433,5 +492,265 @@ public class FeslHandler
         var memcheckResponse = await memcheckPacket.Serialize();
 
         _network.WriteApplicationData(memcheckResponse.AsSpan());
+    }
+
+    //ModifySettings
+    private async Task HandleModifySettings(Packet request)
+    {
+
+        var data = new Dictionary<string, object>
+        {
+            {"TXN", "ModifySettings"}
+        };
+
+
+        var resultPacket = new Packet("acct", FeslTransmissionType.SinglePacketResponse, request.Id, data);
+        var response = await resultPacket.Serialize();
+
+        _network.WriteApplicationData(response.AsSpan());
+    }
+
+    //HandleGameSpyPreAuth
+    private async Task HandleGameSpyPreAuth(Packet request)
+    {
+        var data = new Dictionary<string, object>
+        {
+            {"TXN", "GameSpyPreAuth"},
+            {"challenge", "test"}
+        };
+
+
+        var resultPacket = new Packet("acct", FeslTransmissionType.SinglePacketResponse, request.Id, data);
+        var response = await resultPacket.Serialize();
+
+        _network.WriteApplicationData(response.AsSpan());
+    }
+
+    //GetAccount
+    private async Task HandleGetAccount(Packet request)
+    {
+        const string keyTempl = "W5NyZzx{0}Cki6GQAAKDw.";
+        var lkey = string.Format(keyTempl, "SaUr4131g");
+
+        var data = new Dictionary<string, object>
+        {
+            {"lkey", lkey},
+            {"TXN", "GetAccount"},
+            {"countryDesc", "\"United States of America\""},
+            {"thirdPartyMailFlag", "1"},
+            {"dobMonth", "6"},
+            {"dobYear", "1989"},
+        };
+
+
+        var resultPacket = new Packet("acct", FeslTransmissionType.SinglePacketResponse, request.Id, data);
+        var response = await resultPacket.Serialize();
+
+        _network.WriteApplicationData(response.AsSpan());
+    }
+
+    //LoginSubAccount
+    private async Task HandleLoginSubAccount(Packet request)
+    {
+        const string keyTempl = "W5NyZzx{0}Cki6GQAAKDw.";
+        var lkey = string.Format(keyTempl, "SaUr4131g");
+
+        var data = new Dictionary<string, object>
+        {
+            {"lkey", lkey},
+            {"TXN", "LoginSubAccount"},
+            {"subAccounts.1", "bob"},
+            {"userId", 1000000000000},
+            {"profileId", 1000000000000},
+            {"displayName", "bob"}
+        };
+
+
+        var resultPacket = new Packet("acct", FeslTransmissionType.SinglePacketResponse, request.Id, data);
+        var response = await resultPacket.Serialize();
+
+        _network.WriteApplicationData(response.AsSpan());
+    }
+
+    //HandleNuGetPersonas
+    private async Task HandleNuGetPersonas(Packet request)
+    {
+        var data = new Dictionary<string, object>
+        {
+            {"personas.0", "bob"}
+        };
+
+
+        var resultPacket = new Packet("acct", FeslTransmissionType.SinglePacketResponse, request.Id, data);
+        var response = await resultPacket.Serialize();
+
+        _network.WriteApplicationData(response.AsSpan());
+    }
+
+
+    //NuLoginPersona
+    private async Task HandleNuLoginPersona(Packet request)
+    {
+        const string keyTempl = "W5NyZzx{0}Cki6GQAAKDw.";
+        var lkey = string.Format(keyTempl, "SaUr4131g");
+
+        var data = new Dictionary<string, object>
+        {
+            {"TXN", "NuLoginPersona"},
+            {"lkey", lkey},
+            {"userId", 1000000000000},
+            {"profileId", 1000000000000}
+        };
+
+
+        var resultPacket = new Packet("acct", FeslTransmissionType.SinglePacketResponse, request.Id, data);
+        var response = await resultPacket.Serialize();
+
+        _network.WriteApplicationData(response.AsSpan());
+    }
+
+    //HandleGetSubAccounts
+    private async Task HandleGetSubAccounts(Packet request)
+    {
+        const string keyTempl = "W5NyZzx{0}Cki6GQAAKDw.";
+        var lkey = string.Format(keyTempl, "SaUr4131g");
+
+        var data = new Dictionary<string, object>
+        {
+            {"TXN", "GetSubAccounts"},
+            {"lkey", lkey},
+            {"subAccounts.1", "bob"},
+            {"subAccounts.[]", 1}
+        };
+
+        var resultPacket = new Packet("acct", FeslTransmissionType.SinglePacketResponse, request.Id, data);
+        var response = await resultPacket.Serialize();
+
+        _network.WriteApplicationData(response.AsSpan());
+    }
+
+
+    private async Task HandleLogin3(Packet request)
+    {
+        const string keyTempl = "W5NyZzx{0}Cki6GQAAKDw.";
+        var lkey = string.Format(keyTempl, "SaUr4131g");
+
+        var data = new Dictionary<string, object>
+        {
+            {"TXN", "NuLogin"},
+            {"lkey", lkey},
+            {"userId", 1000000000000},
+            {"profileId", 1000000000000},
+            {"displayName", "bob"}
+        };
+
+        var resultPacket = new Packet("acct", FeslTransmissionType.SinglePacketResponse, request.Id, data);
+        var response = await resultPacket.Serialize();
+
+        _network.WriteApplicationData(response.AsSpan());
+    }
+
+    //NuGetEntitlements
+    private async Task HandleNuGetEntitlements(Packet request)
+    {
+        var group = request.DataDict.TryGetValue("groupName", out var groupName);
+        _logger.LogTrace("groupName: {0}", groupName);
+
+        var data = new Dictionary<string, object>
+        {
+            {"TXN", "NuGetEntitlements"},
+            {"entitlements.[]", 0}
+        };
+
+        var resultPacket = new Packet("acct", FeslTransmissionType.SinglePacketResponse, request.Id, data);
+        var response = await resultPacket.Serialize();
+
+        _network.WriteApplicationData(response.AsSpan());
+    }
+
+    //GetLockerURL
+    private async Task HandleGetLockerURL(Packet request)
+    {
+
+        var data = new Dictionary<string, object>
+        {
+            {"TXN", "GetLockerURL"},
+            {"URL", "http://127.0.0.1/test.php"}
+        };
+
+        var resultPacket = new Packet("acct", FeslTransmissionType.SinglePacketResponse, request.Id, data);
+        var response = await resultPacket.Serialize();
+
+        _network.WriteApplicationData(response.AsSpan());
+    }
+
+    //GetRecordAsMap
+    private async Task HandleGetRecordAsMap(Packet request)
+    {
+        var data = new Dictionary<string, object>
+        {
+            {"TXN", "GetRecordAsMap" },
+            {"localizedMessage", "\"Record not found\""},
+            {"errorContainer.[]", 0},
+            {"errorCode", 5000}
+        };
+
+        var resultPacket = new Packet("acct", FeslTransmissionType.SinglePacketResponse, request.Id, data);
+        var response = await resultPacket.Serialize();
+
+        _network.WriteApplicationData(response.AsSpan());
+    }
+
+    //GetRecord
+    private async Task HandleGetRecord(Packet request)
+    {
+        var data = new Dictionary<string, object>
+        {
+            {"TXN", "GetRecord" },
+            {"localizedMessage", "\"Record not found\""},
+            {"errorContainer.[]", 0},
+            {"errorCode", 5000}
+        };
+
+        var resultPacket = new Packet("acct", FeslTransmissionType.SinglePacketResponse, request.Id, data);
+        var response = await resultPacket.Serialize();
+
+        _network.WriteApplicationData(response.AsSpan());
+    }
+
+    //GetMessages
+    private async Task HandleGetMessages(Packet request)
+    {
+        var data = new Dictionary<string, object>
+        {
+            {"TXN", "GetMessages" },
+            {"localizedMessage", "\"Record not found\""},
+            {"messages.[]", 0}
+        };
+
+        var resultPacket = new Packet("acct", FeslTransmissionType.SinglePacketResponse, request.Id, data);
+        var response = await resultPacket.Serialize();
+
+        _network.WriteApplicationData(response.AsSpan());
+    }
+
+    private async Task HandleLogin2(Packet request)
+    {
+        const string keyTempl = "W5NyZzx{0}Cki6GQAAKDw.";
+        var lkey = string.Format(keyTempl, "SaUr4131g");
+
+        var data = new Dictionary<string, object>
+        {
+            {"TXN", "Login"},
+            {"lkey", lkey},
+            {"userId", 1000000000000},
+            {"profileId", 1000000000000},
+            {"displayName", "bob"}
+        };
+
+        var resultPacket = new Packet("acct", FeslTransmissionType.SinglePacketResponse, request.Id, data);
+        var response = await resultPacket.Serialize();
+
+        _network.WriteApplicationData(response.AsSpan());
     }
 }
