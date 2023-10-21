@@ -1,6 +1,39 @@
 # Arcadia
 
+this is additional support for Battlefield Bad Company 2 and 2142 
+
+#ps3
+bfbc2-ps3.fesl.ea.com
+FeslPort: 18121
+TheaterPort: 18398
+
+
+
+
+
+#pc
+#bfbc2
+bfbc2-pc.fesl.ea.com
+FeslPort: 18390
+
+#bf2142
+bf2142-pc.fesl.ea.com
+FeslPort: 18300
+
+
+
+
+
+
+
+
+
+
+
+
+# original message
 An experimental project in emulating backend services for Battlefield 1943 (possibly others!). Project is in early development and is not yet playable. 
+
 
 **Note**: This project is not affiliated with EA or DICE.
 
